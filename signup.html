@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #c97dc8 0%, #b56cb4 25%, #9b5aad 50%, #7b4a9b 75%, #6a3d8f 100%);
+    overflow: hidden;
+  }
+
+  /* Outer card wrapper */
+  .card-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(220, 185, 230, 0.38);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 28px;
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 12px 48px rgba(80,20,100,0.28), 0 2px 0 rgba(255,255,255,0.18) inset;
+    padding: 40px 36px 40px 40px;
+    gap: 30px;
+    max-width: 680px;
+    width: 95vw;
+    animation: fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(28px) scale(0.97); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  /* ---- LEFT: Form ---- */
+  .form-side {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .form-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2d0d3a;
+    margin-bottom: 28px;
+    letter-spacing: 0.2px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 14px;
+    border-bottom: 1.5px solid rgba(80,20,100,0.35);
+    transition: border-color 0.25s;
+  }
+  .input-group:focus-within {
+    border-bottom-color: #7b2fa8;
+  }
+
+  .input-group input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px 36px 10px 2px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #2d0d3a;
+  }
+  .input-group input::placeholder {
+    color: rgba(60,10,80,0.65);
+    font-weight: 400;
+  }
+
+  .input-icon {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(60,10,80,0.60);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  /* Sign Up button */
+  .btn-signup {
+    width: 100%;
+    margin-top: 22px;
+    padding: 13px;
+    background: linear-gradient(135deg, #5a1a7a 0%, #7b2fa8 50%, #6b22a0 100%);
+    border: none;
+    border-radius: 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.4px;
+    box-shadow: 0 4px 18px rgba(90,26,122,0.45);
+    transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-signup::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 60%);
+    border-radius: 30px;
+  }
+  .btn-signup:hover { transform: translateY(-1px); box-shadow: 0 7px 24px rgba(90,26,122,0.55); filter: brightness(1.07); }
+  .btn-signup:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(90,26,122,0.3); }
+
+  .login-link {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: rgba(60,10,80,0.70);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .login-link:hover { color: #5a1a7a; }
+
+  /* ---- RIGHT: Illustration ---- */
+  .illustration-side {
+    width: 230px;
+    height: 230px;
+    flex-shrink: 0;
+    border-radius: 26px;
+    overflow: hidden;
+    position: relative;
+    background: #0d0820;
+    box-shadow: 0 8px 32px rgba(40,10,70,0.5);
+  }
+
+  .illustration-side canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+
+<div class="card-wrapper">
+  <!-- Form -->
+  <div class="form-side">
+    <div class="form-title">Sign Up</div>
+
+    <div class="input-group">
+      <input type="text" placeholder="User name" id="username" autocomplete="username">
+      <span class="input-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+    </div>
+
+    <div class="input-group">
+      <input type="email" placeholder="Email" id="email" autocomplete="email">
+      <span class="input-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="M2 7l10 7 10-7"/>
+        </svg>
+      </span>
+    </div>
+
+    <div class="input-group">
+      <input type="password" placeholder="Password" id="password" autocomplete="new-password">
+      <span class="input-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </span>
+    </div>
+
+    <button class="btn-signup" onclick="handleSignup()">Sign Up</button>
+    <div class="login-link" onclick="handleLogin()">Already Have Account?</div>
+  </div>
+
+  <!-- Illustration -->
+  <div class="illustration-side">
+    <canvas id="plantCanvas" width="460" height="460"></canvas>
+  </div>
+</div>
+
+<script>
+// ─── Draw the glowing plant illustration ───────────────────────────────────
+const canvas = document.getElementById('plantCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+function noise(x, y, seed) {
+  // Simple pseudo-noise for grainy texture
+  let n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.3) * 43758.5453;
+  return n - Math.floor(n);
+}
+
+function drawGrain(alpha) {
+  const imgData = ctx.getImageData(0, 0, W, H);
+  const d = imgData.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const px = (i / 4) % W;
+    const py = Math.floor((i / 4) / W);
+    const g = (Math.random() - 0.5) * 60 * alpha;
+    d[i]   = Math.min(255, Math.max(0, d[i]   + g));
+    d[i+1] = Math.min(255, Math.max(0, d[i+1] + g));
+    d[i+2] = Math.min(255, Math.max(0, d[i+2] + g));
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
+function drawScene() {
+  // Background
+  const bg = ctx.createRadialGradient(W/2, H*0.55, 40, W/2, H*0.55, W*0.72);
+  bg.addColorStop(0,   '#1a0e30');
+  bg.addColorStop(0.5, '#0f0820');
+  bg.addColorStop(1,   '#060410');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Floor glow
+  const floorGlow = ctx.createRadialGradient(W/2, H*0.88, 10, W/2, H*0.88, W*0.55);
+  floorGlow.addColorStop(0,   'rgba(180,100,255,0.28)');
+  floorGlow.addColorStop(0.5, 'rgba(140,60,220,0.10)');
+  floorGlow.addColorStop(1,   'transparent');
+  ctx.fillStyle = floorGlow;
+  ctx.fillRect(0, 0, W, H);
+
+  drawPot();
+  drawStems();
+  drawLeaves();
+  drawSparkles();
+  drawGrain(0.55);
+}
+
+function drawPot() {
+  // Pot body
+  const potTop = H * 0.62, potBot = H * 0.90;
+  const potTopW = W * 0.38, potBotW = W * 0.30;
+  const cx = W / 2;
+
+  ctx.save();
+
+  // Pot glow halo
+  const halo = ctx.createRadialGradient(cx, potBot, 5, cx, potBot, W*0.42);
+  halo.addColorStop(0,   'rgba(190,120,255,0.32)');
+  halo.addColorStop(0.5, 'rgba(160,80,240,0.12)');
+  halo.addColorStop(1,   'transparent');
+  ctx.fillStyle = halo;
+  ctx.beginPath();
+  ctx.ellipse(cx, potBot + 8, W*0.42, 38, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Pot shape path
+  ctx.beginPath();
+  ctx.moveTo(cx - potTopW, potTop);
+  ctx.bezierCurveTo(cx - potTopW - 10, potTop + 10, cx - potBotW - 8, potBot - 20, cx - potBotW, potBot);
+  ctx.quadraticCurveTo(cx, potBot + 14, cx + potBotW, potBot);
+  ctx.bezierCurveTo(cx + potBotW + 8, potBot - 20, cx + potTopW + 10, potTop + 10, cx + potTopW, potTop);
+  ctx.closePath();
+
+  const potGrad = ctx.createLinearGradient(cx - potTopW, potTop, cx + potTopW, potBot);
+  potGrad.addColorStop(0,    '#c090e0');
+  potGrad.addColorStop(0.25, '#b07acc');
+  potGrad.addColorStop(0.5,  '#9868b8');
+  potGrad.addColorStop(0.75, '#7a50a0');
+  potGrad.addColorStop(1,    '#6a3d90');
+  ctx.fillStyle = potGrad;
+  ctx.fill();
+
+  // Pot rim (top ellipse)
+  ctx.beginPath();
+  ctx.ellipse(cx, potTop, potTopW, 12, 0, 0, Math.PI*2);
+  const rimGrad = ctx.createLinearGradient(cx - potTopW, potTop - 12, cx + potTopW, potTop + 12);
+  rimGrad.addColorStop(0, '#d8b0f0');
+  rimGrad.addColorStop(0.5, '#c090e0');
+  rimGrad.addColorStop(1, '#a070c8');
+  ctx.fillStyle = rimGrad;
+  ctx.fill();
+
+  // Rim highlight
+  ctx.beginPath();
+  ctx.ellipse(cx, potTop - 3, potTopW * 0.7, 5, 0, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fill();
+
+  // Pot highlight stripe
+  ctx.beginPath();
+  ctx.moveTo(cx - potTopW * 0.55, potTop + 18);
+  ctx.bezierCurveTo(cx - potTopW * 0.50, potTop + 60, cx - potBotW * 0.60, potBot - 40, cx - potBotW * 0.55, potBot - 10);
+  ctx.lineWidth = 8;
+  ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function roundedBlob(cx, cy, rx, ry, angle, color1, color2, glowColor) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+
+  // Glow
+  const glow = ctx.createRadialGradient(0, 0, rx * 0.2, 0, 0, Math.max(rx, ry) * 1.4);
+  glow.addColorStop(0, glowColor);
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, rx * 1.6, ry * 1.5, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Blob body
+  ctx.beginPath();
+  ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI*2);
+  const g = ctx.createLinearGradient(-rx, -ry, rx * 0.5, ry);
+  g.addColorStop(0, color1);
+  g.addColorStop(1, color2);
+  ctx.fillStyle = g;
+  ctx.fill();
+
+  // Sheen highlight
+  ctx.beginPath();
+  ctx.ellipse(-rx*0.22, -ry*0.28, rx*0.30, ry*0.22, -0.3, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.13)';
+  ctx.fill();
+
+  // Sparkle dots on blob
+  for (let i = 0; i < 6; i++) {
+    const bx = (Math.random()*2-1)*rx*0.7;
+    const by = (Math.random()*2-1)*ry*0.7;
+    ctx.beginPath();
+    ctx.arc(bx, by, Math.random()*2 + 0.5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,' + (Math.random()*0.35 + 0.1) + ')';
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawStems() {
+  const cx = W/2, potTop = H*0.62;
+
+  // Center tall blob
+  roundedBlob(cx, potTop - 120, 30, 110, 0,
+    '#9ab8f0', '#7090d8',
+    'rgba(120,160,255,0.22)');
+
+  // Left blob
+  roundedBlob(cx - 58, potTop - 90, 26, 96, -0.22,
+    '#8aaee8', '#6888cc',
+    'rgba(100,140,240,0.18)');
+
+  // Right blob
+  roundedBlob(cx + 60, potTop - 88, 25, 94, 0.20,
+    '#9ab8f0', '#7090d8',
+    'rgba(110,150,250,0.18)');
+
+  // Far left small blob
+  roundedBlob(cx - 108, potTop - 52, 18, 65, -0.40,
+    '#a0bcf4', '#7898dc',
+    'rgba(120,160,255,0.14)');
+
+  // Far right small blob
+  roundedBlob(cx + 110, potTop - 50, 17, 62, 0.38,
+    '#9ab8f0', '#7090d8',
+    'rgba(110,150,250,0.14)');
+}
+
+function leafSprig(x, y, angle, scale, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.scale(scale, scale);
+
+  // Stem
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, -42);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+
+  // Leaf pairs
+  const pairs = [
+    { y: -14, w: 10, h: 5, a: 0.55 },
+    { y: -24, w: 12, h: 5.5, a: 0.50 },
+    { y: -34, w: 10, h: 4.5, a: 0.45 },
+  ];
+  pairs.forEach(p => {
+    [-1, 1].forEach(side => {
+      ctx.save();
+      ctx.translate(0, p.y);
+      ctx.rotate(side * p.a);
+      ctx.beginPath();
+      ctx.ellipse(side * p.w * 0.5, 0, p.w, p.h, 0, 0, Math.PI*2);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.88;
+      ctx.fill();
+      ctx.restore();
+    });
+  });
+
+  ctx.restore();
+}
+
+function drawLeaves() {
+  const cx = W/2, potTop = H*0.62;
+
+  // Pink/mauve sprigs
+  leafSprig(cx - 88,  potTop - 70,  -0.55, 1.1, 'rgba(220,150,190,0.85)');
+  leafSprig(cx + 90,  potTop - 68,   0.52, 1.05,'rgba(210,140,185,0.80)');
+  leafSprig(cx - 42,  potTop - 150, -0.28, 0.9, 'rgba(215,145,190,0.75)');
+  leafSprig(cx + 44,  potTop - 148,  0.25, 0.88,'rgba(220,150,195,0.75)');
+  leafSprig(cx,       potTop - 225, -0.08, 0.80,'rgba(210,140,188,0.70)');
+  leafSprig(cx - 118, potTop - 30,  -0.80, 0.75,'rgba(215,145,188,0.65)');
+  leafSprig(cx + 118, potTop - 28,   0.78, 0.72,'rgba(210,140,185,0.65)');
+}
+
+function drawSparkles() {
+  const sparkles = [
+    {x: W*0.22, y: H*0.18, r: 2.5},
+    {x: W*0.78, y: H*0.22, r: 2.0},
+    {x: W*0.15, y: H*0.42, r: 1.5},
+    {x: W*0.85, y: H*0.38, r: 1.8},
+    {x: W*0.50, y: H*0.10, r: 2.2},
+    {x: W*0.60, y: H*0.55, r: 1.4},
+    {x: W*0.35, y: H*0.65, r: 1.3},
+    {x: W*0.68, y: H*0.14, r: 1.6},
+    {x: W*0.30, y: H*0.25, r: 1.2},
+    {x: W*0.72, y: H*0.60, r: 1.5},
+  ];
+
+  sparkles.forEach(s => {
+    // Glow
+    const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 5);
+    g.addColorStop(0, 'rgba(200,180,255,0.60)');
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r * 5, 0, Math.PI*2);
+    ctx.fill();
+
+    // Core dot
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(240,230,255,0.95)';
+    ctx.fill();
+
+    // Cross arms
+    ctx.save();
+    ctx.translate(s.x, s.y);
+    for (let a = 0; a < 4; a++) {
+      ctx.save();
+      ctx.rotate(a * Math.PI/4);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -s.r * 3.5);
+      ctx.lineWidth = 0.7;
+      ctx.strokeStyle = 'rgba(240,230,255,0.65)';
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+}
+
+// Seed Math.random for repeatable sparkle positions in grain
+let _seed = 42;
+const origRandom = Math.random;
+Math.random = function() {
+  _seed = (_seed * 9301 + 49297) % 233280;
+  return _seed / 233280;
+};
+drawScene();
+Math.random = origRandom;
+
+// Button handler
+function handleSignup() {
+  const btn = document.querySelector('.btn-signup');
+  btn.textContent = 'Creating…';
+  btn.style.opacity = '0.80';
+  setTimeout(() => { btn.textContent = 'Sign Up'; btn.style.opacity = '1'; }, 1800);
+}
+function handleLogin() {
+  alert('Redirecting to login…');
+}
+</script>
+</body>
+</html>

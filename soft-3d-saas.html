@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soft 3D SaaS Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+/* ═══════════════════════════════════════════
+   VARIABLES
+═══════════════════════════════════════════ */
+:root {
+  --sand:    #c8a882;
+  --sand-lt: #d9bfa0;
+  --sand-dk: #a88a65;
+  --teal:    #8ab5b5;
+  --teal-lt: #aacfcf;
+  --teal-dk: #6a9898;
+  --cream:   #f2ede8;
+  --cream2:  #ede8e2;
+  --off-white: #f7f4f0;
+  --bg-top:  #b8c8c8;
+  --bg-mid:  #c8d5d5;
+  --bg-bot:  #d0d8d8;
+  --card-bg: rgba(248,245,240,0.92);
+  --shadow-card: 0 8px 40px rgba(100,110,110,0.18), 0 2px 12px rgba(100,110,110,0.10);
+  --shadow-3d: 4px 8px 20px rgba(100,110,110,0.22), -2px -2px 8px rgba(255,255,255,0.80);
+  --shadow-inset: inset 2px 2px 6px rgba(180,190,190,0.40), inset -2px -2px 6px rgba(255,255,255,0.80);
+  --text: #4a4a4a;
+  --text-lt: #8a8a8a;
+  --font: 'DM Sans', sans-serif;
+  --font-display: 'Nunito', sans-serif;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
+
+body {
+  font-family: var(--font);
+  min-height: 100vh;
+  background: var(--bg-mid);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 20px 60px;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   SCULPTURAL BACKGROUND
+═══════════════════════════════════════════ */
+.bg-scene {
+  position: fixed; inset: 0; z-index: 0;
+  overflow: hidden;
+}
+
+/* Wave/mountain shapes */
+.bg-scene svg {
+  position: absolute;
+  width: 100%; height: 100%;
+}
+
+/* ═══════════════════════════════════════════
+   LAYOUT GRID
+═══════════════════════════════════════════ */
+.dashboard {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 20px;
+  max-width: 780px;
+  width: 100%;
+  padding-top: 10px;
+}
+
+/* ═══════════════════════════════════════════
+   CARD BASE — soft 3D clay morphism
+═══════════════════════════════════════════ */
+.card {
+  background: var(--card-bg);
+  border-radius: 22px;
+  border: 1.5px solid rgba(255,255,255,0.88);
+  box-shadow:
+    0 12px 48px rgba(90,100,100,0.18),
+    0 3px 12px rgba(90,100,100,0.10),
+    inset 0 2px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(200,210,210,0.30);
+  padding: 20px 22px 22px;
+  position: relative;
+  overflow: visible;
+  animation: cardFloat 0.65s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes cardFloat {
+  from { opacity:0; transform: translateY(20px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.12s; }
+.card:nth-child(3) { animation-delay: 0.19s; }
+.card:nth-child(4) { animation-delay: 0.26s; }
+.card:nth-child(5) { animation-delay: 0.33s; }
+.card:nth-child(6) { animation-delay: 0.40s; }
+
+/* Card ping dot (top-left corner decoration) */
+.card-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e8c8a0, #c8a070);
+  box-shadow: 2px 3px 8px rgba(160,120,70,0.40), -1px -1px 3px rgba(255,255,255,0.70);
+  position: absolute;
+  top: -5px; left: -5px;
+}
+
+.card-label {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  color: var(--text-lt);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+/* ═══════════════════════════════════════════
+   CARD 1 — Wave Area Chart
+═══════════════════════════════════════════ */
+.card-wide { grid-column: span 2; }
+
+.wave-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.wave-label-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wave-label-pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(248,245,240,0.95);
+  border: 1px solid rgba(255,255,255,0.90);
+  border-radius: 8px;
+  box-shadow: var(--shadow-3d);
+  padding: 4px 10px;
+  font-size: 11px; font-weight: 600;
+  color: var(--text);
+  gap: 5px;
+}
+.wave-label-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+}
+.wave-sub { font-size: 10px; color: var(--text-lt); margin-top: 1px; }
+
+/* ═══════════════════════════════════════════
+   CARD 2 — Donut + Knob
+═══════════════════════════════════════════ */
+.donut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* 3D Knob */
+.knob-3d {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #f0c890, #c88840, #a06020);
+  box-shadow:
+    4px 6px 16px rgba(160,100,30,0.45),
+    -2px -2px 8px rgba(255,220,160,0.60),
+    inset 2px 2px 5px rgba(255,220,160,0.30),
+    inset -2px -2px 5px rgba(100,60,10,0.20);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+.knob-3d:hover { transform: rotate(18deg) scale(1.05); }
+.knob-3d::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  width: 3px; height: 16px;
+  background: rgba(255,255,255,0.55);
+  border-radius: 2px;
+}
+
+.drop-icon {
+  font-size: 22px;
+  color: var(--teal);
+  text-align: center;
+  margin-top: 6px;
+}
+
+.card-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(200,210,210,0.28);
+}
+
+.action-btn {
+  width: 30px; height: 30px;
+  border-radius: 10px;
+  background: rgba(248,245,240,0.95);
+  border: 1px solid rgba(255,255,255,0.90);
+  box-shadow: var(--shadow-3d);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-lt);
+  transition: all 0.2s;
+}
+.action-btn:hover {
+  background: var(--off-white);
+  transform: translateY(-2px);
+  box-shadow: 4px 10px 24px rgba(100,110,110,0.22), -2px -2px 8px rgba(255,255,255,0.85);
+}
+
+/* ═══════════════════════════════════════════
+   CARD 3 — 3D Pie wheel left
+═══════════════════════════════════════════ */
+.pie-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.mini-donut {
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   CARD 4 — Metric list + wave
+═══════════════════════════════════════════ */
+.metric-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(200,210,210,0.22);
+}
+.metric-row:last-of-type { border-bottom: none; margin-bottom: 0; }
+
+.metric-title { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.metric-sub   { font-size: 10.5px; color: var(--text-lt); margin-top: 2px; }
+.metric-val   { font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--text); }
+
+.mini-wave-wrap { margin-top: 12px; }
+
+.wave-tabs {
+  display: flex; gap: 5px; margin-top: 10px;
+}
+.wave-tab {
+  flex: 1;
+  padding: 5px 0;
+  font-size: 10px; font-weight: 600;
+  color: var(--text-lt);
+  background: rgba(248,245,240,0.90);
+  border: 1px solid rgba(255,255,255,0.85);
+  border-radius: 8px;
+  box-shadow: var(--shadow-3d);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.wave-tab.active { color: var(--text); background: var(--off-white); }
+.wave-tab:hover { transform: translateY(-1px); }
+
+.legend-row { display: flex; gap: 10px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-lt); }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════
+   CARD 5 — Circles + Droplets
+═══════════════════════════════════════════ */
+.circles-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.circle-3d {
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.circle-3d:hover { transform: translateY(-4px) scale(1.04); }
+
+.circle-lg {
+  width: 90px; height: 90px;
+  background: radial-gradient(circle at 38% 32%, #f0e0d0, #e8c8a8, #c8a070);
+  box-shadow:
+    6px 10px 28px rgba(160,120,60,0.38),
+    -3px -3px 12px rgba(255,235,200,0.65),
+    inset 3px 3px 8px rgba(255,235,200,0.35),
+    inset -3px -3px 8px rgba(140,90,30,0.18);
+}
+.circle-md {
+  width: 72px; height: 72px;
+  background: radial-gradient(circle at 38% 32%, #d0e0e0, #b0d0d0, #80b0b0);
+  box-shadow:
+    5px 8px 22px rgba(80,120,120,0.32),
+    -2px -2px 10px rgba(220,240,240,0.65),
+    inset 2px 2px 7px rgba(220,240,240,0.35),
+    inset -2px -2px 7px rgba(60,100,100,0.16);
+}
+.circle-sm {
+  width: 56px; height: 56px;
+  background: radial-gradient(circle at 38% 32%, #f0d8c0, #e0b890, #c09060);
+  box-shadow:
+    4px 6px 18px rgba(160,120,60,0.32),
+    -2px -2px 8px rgba(255,225,185,0.60),
+    inset 2px 2px 6px rgba(255,225,185,0.30),
+    inset -2px -2px 6px rgba(140,90,30,0.15);
+}
+
+.circle-text {
+  font-family: var(--font-display);
+  font-size: 9.5px; font-weight: 700;
+  color: rgba(80,55,25,0.65);
+  text-align: center;
+  line-height: 1.3;
+  padding: 0 6px;
+}
+
+/* Droplet shapes */
+.droplets-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.droplet {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.droplet:hover { transform: translateY(-5px) scale(1.06); }
+
+.droplet-sand {
+  width: 48px; height: 62px;
+  background: radial-gradient(ellipse at 40% 30%, #f0d4b0, #d8b888, #b8906a);
+  box-shadow:
+    4px 7px 20px rgba(160,120,60,0.38),
+    -2px -2px 10px rgba(255,225,185,0.60),
+    inset 2px 2px 7px rgba(255,225,185,0.30),
+    inset -2px -2px 7px rgba(140,90,30,0.16);
+  clip-path: path('M24 0 C24 0 48 24 48 38 C48 52 38 62 24 62 C10 62 0 52 0 38 C0 24 24 0 24 0 Z');
+}
+
+.droplet-teal {
+  width: 40px; height: 52px;
+  background: radial-gradient(ellipse at 40% 30%, #c8e0e0, #a0c8c8, #78a8a8);
+  box-shadow:
+    3px 6px 16px rgba(80,120,120,0.32),
+    -2px -2px 8px rgba(200,235,235,0.60),
+    inset 2px 2px 6px rgba(200,235,235,0.30),
+    inset -2px -2px 6px rgba(60,100,100,0.15);
+  clip-path: path('M20 0 C20 0 40 20 40 31 C40 43 31 52 20 52 C9 52 0 43 0 31 C0 20 20 0 20 0 Z');
+}
+
+.card5-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(200,210,210,0.22);
+  gap: 10px;
+}
+
+.btn-3d {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #1a1a2e;
+  border-radius: 10px;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  font-family: var(--font);
+  font-size: 11px; font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    3px 5px 14px rgba(10,10,30,0.40),
+    -1px -1px 4px rgba(80,80,100,0.20),
+    inset 1px 1px 3px rgba(255,255,255,0.08);
+  transition: all 0.2s;
+}
+.btn-3d:hover { transform: translateY(-2px); box-shadow: 4px 8px 20px rgba(10,10,30,0.50); }
+
+.input-3d {
+  flex: 1;
+  height: 32px;
+  background: rgba(248,245,240,0.95);
+  border: 1px solid rgba(255,255,255,0.90);
+  border-radius: 10px;
+  box-shadow: var(--shadow-inset);
+  padding: 0 12px;
+  font-family: var(--font);
+  font-size: 11px; color: var(--text-lt);
+  outline: none;
+}
+
+.icon-row { display: flex; gap: 6px; }
+.icon-sm {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: rgba(248,245,240,0.95);
+  border: 1px solid rgba(255,255,255,0.88);
+  box-shadow: var(--shadow-3d);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.icon-sm:hover { transform: translateY(-2px) scale(1.05); }
+
+.dots-row { display: flex; gap: 5px; align-items: center; margin-top: 8px; }
+.dot-sm {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(248,245,240,0.95);
+  border: 1px solid rgba(255,255,255,0.88);
+  box-shadow: var(--shadow-3d);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dot-sm:hover { transform: scale(1.1); }
+.dot-active { background: radial-gradient(circle at 38% 35%, #d0e8e8, #a0c8c8); }
+
+/* ═══════════════════════════════════════════
+   CARD 6 — Counters + Toggles
+═══════════════════════════════════════════ */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.toggle-3d {
+  width: 42px; height: 22px;
+  border-radius: var(--radius-pill, 999px);
+  position: relative;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.80);
+  transition: background 0.25s;
+  box-shadow: var(--shadow-inset);
+  flex-shrink: 0;
+}
+.toggle-3d.on  { background: linear-gradient(135deg, #c8a070, #e0b880); box-shadow: var(--shadow-inset), 2px 3px 8px rgba(160,120,40,0.30); }
+.toggle-3d.off { background: linear-gradient(135deg, #d8d8d8, #e8e8e8); }
+
+.toggle-3d .t-knob {
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #ffffff, #e8e8e8);
+  box-shadow: 2px 3px 6px rgba(100,100,100,0.28), -1px -1px 3px rgba(255,255,255,0.80);
+  position: absolute;
+  top: 2px;
+  transition: left 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toggle-3d.on  .t-knob { left: 21px; }
+.toggle-3d.off .t-knob { left:  2px; }
+
+.toggle-label { font-size: 11.5px; font-weight: 500; color: var(--text); }
+.toggle-sub   { font-size: 10px; color: var(--text-lt); }
+
+.btn-pill-3d {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: none;
+  font-family: var(--font);
+  font-size: 11.5px; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s;
+}
+.btn-pill-sand {
+  background: linear-gradient(135deg, #e8c090, #c8a060);
+  color: #fff;
+  box-shadow: 3px 5px 14px rgba(160,120,40,0.40), -1px -1px 4px rgba(255,225,160,0.50), inset 1px 1px 3px rgba(255,225,160,0.25);
+}
+.btn-pill-sand:hover { transform: translateY(-2px); box-shadow: 4px 8px 20px rgba(160,120,40,0.50); }
+
+.btn-pill-glass {
+  background: rgba(248,245,240,0.95);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.90);
+  box-shadow: var(--shadow-3d);
+}
+.btn-pill-glass:hover { transform: translateY(-2px); }
+.btn-pill-dark {
+  background: #c0c8c8;
+  color: var(--text);
+  box-shadow: 3px 5px 12px rgba(100,110,110,0.28), inset 1px 1px 3px rgba(255,255,255,0.28);
+}
+.btn-pill-dark:hover { transform: translateY(-2px); }
+
+.counters-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(200,210,210,0.22);
+}
+.counter-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px 6px;
+  background: rgba(248,245,240,0.90);
+  border: 1px solid rgba(255,255,255,0.88);
+  border-radius: 14px;
+  box-shadow: var(--shadow-3d);
+}
+.counter-val {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 800;
+  color: var(--text);
+}
+.counter-lbl { font-size: 9px; color: var(--text-lt); font-weight: 500; margin-top: 2px; }
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(160,170,170,0.35); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Sculptural background SVG -->
+<div class="bg-scene">
+<svg viewBox="0 0 800 1100" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#b0c4c4"/>
+      <stop offset="40%"  stop-color="#c0d0d0"/>
+      <stop offset="100%" stop-color="#c8d8d8"/>
+    </linearGradient>
+    <filter id="blur8"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="blur5"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="blur3"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+
+  <!-- Base fill -->
+  <rect width="800" height="1100" fill="url(#bgGrad)"/>
+
+  <!-- Background sculptural waves — top-right area -->
+  <g filter="url(#blur5)">
+    <!-- Large teal wave blob top-right -->
+    <ellipse cx="680" cy="120" rx="200" ry="160" fill="#a8c0c0" opacity="0.70"/>
+    <ellipse cx="720" cy="80"  rx="140" ry="110" fill="#b8d0d0" opacity="0.55"/>
+    <ellipse cx="640" cy="180" rx="180" ry="140" fill="#98b0b0" opacity="0.45"/>
+    <!-- Layered wave mountains top-right -->
+    <path d="M580 0 Q650 60 700 40 Q760 10 800 50 L800 0 Z" fill="#b0c8c8" opacity="0.60"/>
+    <path d="M550 0 Q610 80 680 55 Q740 30 800 70 L800 0 Z" fill="#a0b8b8" opacity="0.45"/>
+
+    <!-- Left wave blob -->
+    <ellipse cx="80" cy="250" rx="160" ry="200" fill="#a8b8b8" opacity="0.50"/>
+    <ellipse cx="40" cy="300" rx="120" ry="160" fill="#98a8a8" opacity="0.40"/>
+
+    <!-- Bottom left big sculptural shape -->
+    <path d="M0 900 Q100 800 200 850 Q300 900 350 820 Q400 740 350 700 L0 700 Z" fill="#98b0b0" opacity="0.55"/>
+    <path d="M0 1000 Q150 880 280 930 Q380 960 420 880 L420 1100 L0 1100 Z" fill="#88a0a0" opacity="0.45"/>
+
+    <!-- Right bottom wave -->
+    <path d="M500 1000 Q620 940 700 970 Q760 990 800 940 L800 1100 L500 1100 Z" fill="#a0b8b8" opacity="0.40"/>
+
+    <!-- Mid shape -->
+    <path d="M0 500 Q60 440 140 470 Q200 490 220 450 Q240 410 200 380 L0 380 Z" fill="#90a8a8" opacity="0.35"/>
+  </g>
+
+  <!-- Foreground cloth/fabric bottom drape -->
+  <g filter="url(#blur3)">
+    <path d="M0 1020 Q80 980 160 1010 Q240 1040 310 1000 Q370 960 430 1000 Q490 1040 560 1010 Q630 980 700 1020 Q750 1040 800 1010 L800 1100 L0 1100 Z"
+          fill="#b0c4c4" opacity="0.65"/>
+    <path d="M0 1060 Q100 1030 200 1060 Q290 1085 380 1050 Q470 1015 560 1055 Q650 1080 800 1045 L800 1100 L0 1100 Z"
+          fill="#c0d0d0" opacity="0.50"/>
+  </g>
+</svg>
+</div>
+
+<!-- ════════════════════════ DASHBOARD ════════════════════════ -->
+<div class="dashboard">
+
+  <!-- ══ CARD 1: Area / Wave Chart ══ -->
+  <div class="card card-wide">
+    <div class="card-dot"></div>
+    <div class="card-label">Lo Pian</div>
+
+    <div style="display:flex; gap:16px; align-items:flex-start; margin-bottom:12px;">
+      <div style="display:flex; flex-direction:column; gap:7px;">
+        <div class="wave-label-item">
+          <div class="wave-label-pill">
+            <div class="wave-label-dot" style="background:radial-gradient(circle at 38% 35%,#f0d0b0,#c8a070)"></div>
+            Tellswold
+          </div>
+        </div>
+        <div class="wave-label-item">
+          <div class="wave-label-pill">
+            <div class="wave-label-dot" style="background:radial-gradient(circle at 38% 35%,#c8e0e0,#88b8b8)"></div>
+            Dreamspace
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1px;margin-left:3px;">
+            <div class="wave-sub">Collaboration</div>
+            <div class="wave-sub">Collaboration</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- SVG Wave Area Chart -->
+    <svg viewBox="0 0 500 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;border-radius:12px;overflow:hidden;">
+      <defs>
+        <linearGradient id="waveSand" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#d4b080" stop-opacity="0.90"/>
+          <stop offset="100%" stop-color="#c89860" stop-opacity="0.55"/>
+        </linearGradient>
+        <linearGradient id="waveTeal" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#90c0c0" stop-opacity="0.75"/>
+          <stop offset="100%" stop-color="#70a8a8" stop-opacity="0.40"/>
+        </linearGradient>
+        <linearGradient id="waveCream" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#e8d8c0" stop-opacity="0.80"/>
+          <stop offset="100%" stop-color="#d0c0a0" stop-opacity="0.45"/>
+        </linearGradient>
+        <filter id="waveShadow"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(140,100,50,0.20)"/></filter>
+      </defs>
+
+      <!-- Background -->
+      <rect width="500" height="130" fill="rgba(248,245,240,0.60)" rx="0"/>
+
+      <!-- Back layer — cream hills -->
+      <path d="M0 100 Q60 75 120 82 Q180 90 240 70 Q300 50 360 65 Q420 80 500 58 L500 130 L0 130 Z"
+            fill="url(#waveCream)" filter="url(#waveShadow)"/>
+
+      <!-- Mid layer — teal wave -->
+      <path d="M0 110 Q50 90 100 95 Q160 100 220 80 Q280 58 340 72 Q400 86 460 68 Q480 62 500 66 L500 130 L0 130 Z"
+            fill="url(#waveTeal)" filter="url(#waveShadow)"/>
+
+      <!-- Front layer — sand mountains (bold) -->
+      <path d="M0 130 Q40 130 80 128 Q110 126 150 90 Q180 60 220 75 Q260 90 300 115 Q340 130 380 118 Q420 106 460 90 Q480 82 500 88 L500 130 Z"
+            fill="url(#waveSand)" filter="url(#waveShadow)"/>
+
+      <!-- Highlights on sand peaks -->
+      <path d="M148 92 Q165 68 182 78" stroke="rgba(255,230,180,0.50)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- ══ CARD 2: Donut + Knob ══ -->
+  <div class="card">
+    <div class="card-dot"></div>
+    <div class="card-label">Sprite Nacing</div>
+
+    <div class="donut-row">
+      <!-- Big 3D Donut -->
+      <div style="position:relative;flex-shrink:0">
+        <svg viewBox="0 0 110 110" width="110" height="110" style="filter:drop-shadow(4px 8px 16px rgba(100,110,110,0.28)) drop-shadow(-2px -2px 6px rgba(255,255,255,0.70))">
+          <defs>
+            <linearGradient id="donutTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a8d0d0"/>
+              <stop offset="100%" stop-color="#68a8a8"/>
+            </linearGradient>
+            <linearGradient id="donutSand" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e8c090"/>
+              <stop offset="100%" stop-color="#c8904a"/>
+            </linearGradient>
+            <linearGradient id="donutCream" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f0e8dc"/>
+              <stop offset="100%" stop-color="#ddd0c0"/>
+            </linearGradient>
+          </defs>
+          <!-- Donut segments — drawn as thick arcs with stroke-dasharray -->
+          <!-- teal large segment ~220deg -->
+          <circle cx="55" cy="55" r="36"
+                  fill="none"
+                  stroke="url(#donutTeal)"
+                  stroke-width="20"
+                  stroke-dasharray="140 87"
+                  stroke-dashoffset="-10"
+                  stroke-linecap="round"/>
+          <!-- sand segment ~100deg -->
+          <circle cx="55" cy="55" r="36"
+                  fill="none"
+                  stroke="url(#donutSand)"
+                  stroke-width="20"
+                  stroke-dasharray="63 164"
+                  stroke-dashoffset="-152"
+                  stroke-linecap="round"/>
+          <!-- cream gap fill -->
+          <circle cx="55" cy="55" r="36"
+                  fill="none"
+                  stroke="url(#donutCream)"
+                  stroke-width="20"
+                  stroke-dasharray="10 217"
+                  stroke-dashoffset="-215"
+                  stroke-linecap="round"/>
+          <!-- Center hole -->
+          <circle cx="55" cy="55" r="24" fill="rgba(248,245,240,0.82)"/>
+          <!-- Shine on donut edge -->
+          <ellipse cx="42" cy="28" rx="8" ry="4" fill="rgba(255,255,255,0.30)" transform="rotate(-40 42 28)"/>
+        </svg>
+      </div>
+
+      <!-- Right side: knob + drop -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div class="knob-3d"></div>
+        <div class="drop-icon">
+          <svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="dropG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#90c0c0"/>
+                <stop offset="100%" stop-color="#60a0a0"/>
+              </linearGradient>
+            </defs>
+            <path d="M11 0 C11 0 22 12 22 19 C22 25.6 17.1 30 11 30 C4.9 30 0 25.6 0 19 C0 12 11 0 11 0 Z"
+                  fill="url(#dropG)"
+                  style="filter:drop-shadow(2px 4px 8px rgba(80,120,120,0.38)) drop-shadow(-1px -1px 4px rgba(200,240,240,0.55))"/>
+            <ellipse cx="8" cy="14" rx="3" ry="5" fill="rgba(255,255,255,0.25)" transform="rotate(-15 8 14)"/>
+          </svg>
+        </div>
+        <div style="font-size:9.5px;color:var(--text-lt);text-align:center;">Hydration<br>Levels</div>
+      </div>
+    </div>
+
+    <!-- Action icon row -->
+    <div class="card-actions-row">
+      <!-- + -->
+      <div class="action-btn">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="6" y1="1" x2="6" y2="11" stroke="#888" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="6" x2="11" y2="6" stroke="#888" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <!-- rotate -->
+      <div class="action-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 .49-3.32"/></svg>
+      </div>
+      <!-- share -->
+      <div class="action-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </div>
+      <!-- bell -->
+      <div class="action-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <!-- cursor -->
+      <div class="action-btn">
+        <svg width="12" height="13" viewBox="0 0 12 13" fill="none"><path d="M2 1 L10 6 L6 7 L5 11 Z" fill="none" stroke="#888" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 3: Pie Wheel left + mini donuts ══ -->
+  <div class="card">
+    <div class="card-dot"></div>
+    <div class="card-label">Abit Goel</div>
+
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <!-- Big 3D pie chart -->
+      <svg viewBox="0 0 110 110" width="100" height="100" style="flex-shrink:0;filter:drop-shadow(5px 9px 18px rgba(90,100,100,0.28)) drop-shadow(-2px -2px 8px rgba(255,255,255,0.65))">
+        <defs>
+          <linearGradient id="pieT1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#9cc8c8"/><stop offset="100%" stop-color="#68a0a0"/></linearGradient>
+          <linearGradient id="pieT2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#78b0b0"/><stop offset="100%" stop-color="#4a9090"/></linearGradient>
+          <linearGradient id="pieT3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a8d0d0"/><stop offset="100%" stop-color="#80b8b8"/></linearGradient>
+          <linearGradient id="pieSh" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5a8888"/><stop offset="100%" stop-color="#3a6868"/></linearGradient>
+          <linearGradient id="pieGr" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#88a8a8"/><stop offset="100%" stop-color="#5a8080"/></linearGradient>
+        </defs>
+        <!-- pie segments as paths  (cx=55,cy=55,r=45) -->
+        <!-- segment 1 ~90deg teal light -->
+        <path d="M55 55 L55 10 A45 45 0 0 1 100 55 Z" fill="url(#pieT1)"/>
+        <!-- segment 2 ~70deg teal mid -->
+        <path d="M55 55 L100 55 A45 45 0 0 1 71.9 96.3 Z" fill="url(#pieT2)"/>
+        <!-- segment 3 ~80deg teal dark -->
+        <path d="M55 55 L71.9 96.3 A45 45 0 0 1 14.5 76.1 Z" fill="url(#pieSh)"/>
+        <!-- segment 4 ~60deg gray-teal -->
+        <path d="M55 55 L14.5 76.1 A45 45 0 0 1 10 55 Z" fill="url(#pieGr)"/>
+        <!-- segment 5 ~60deg teal bright -->
+        <path d="M55 55 L10 55 A45 45 0 0 1 55 10 Z" fill="url(#pieT3)"/>
+        <!-- Edge glow lines -->
+        <line x1="55" y1="55" x2="55" y2="10"   stroke="rgba(255,255,255,0.32)" stroke-width="1"/>
+        <line x1="55" y1="55" x2="100" y2="55"  stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+        <line x1="55" y1="55" x2="71.9" y2="96.3" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+        <line x1="55" y1="55" x2="14.5" y2="76.1" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+        <!-- Highlight sheen -->
+        <ellipse cx="72" cy="30" rx="12" ry="6" fill="rgba(255,255,255,0.18)" transform="rotate(45 72 30)"/>
+      </svg>
+
+      <!-- Legend pills -->
+      <div style="display:flex;flex-direction:column;gap:5px;flex:1;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-lt);margin-bottom:3px;">Lo Name</div>
+        <div style="font-size:10px;color:var(--text-lt);">Lonsense<br><span style="font-size:9px">Domainance</span></div>
+        <div style="font-size:10px;color:var(--text-lt);margin-top:4px;">Lo Name</div>
+        <div style="font-size:10px;color:var(--text-lt);">Lonsense<br><span style="font-size:9px">Domainance</span></div>
+      </div>
+    </div>
+
+    <!-- Mini donut row -->
+    <div class="pie-mini-row">
+      <!-- Mini donut 1 — sand -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <svg viewBox="0 0 44 44" width="44" height="44" style="filter:drop-shadow(2px 4px 8px rgba(160,120,50,0.30))">
+          <circle cx="22" cy="22" r="14" fill="none" stroke="#e0b870" stroke-width="9" stroke-dasharray="55 33" stroke-dashoffset="-5" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="14" fill="none" stroke="#c89040" stroke-width="9" stroke-dasharray="32 56" stroke-dashoffset="-60" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="8" fill="rgba(248,245,240,0.80)"/>
+        </svg>
+        <div style="font-size:9px;color:var(--text-lt);text-align:center;">subaltek</div>
+      </div>
+      <!-- Mini donut 2 — teal-sand -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <svg viewBox="0 0 44 44" width="44" height="44" style="filter:drop-shadow(2px 4px 8px rgba(80,120,120,0.28))">
+          <circle cx="22" cy="22" r="14" fill="none" stroke="#a8c8c8" stroke-width="9" stroke-dasharray="44 44" stroke-dashoffset="-5" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="14" fill="none" stroke="#d8a860" stroke-width="9" stroke-dasharray="22 66" stroke-dashoffset="-49" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="8" fill="rgba(248,245,240,0.80)"/>
+        </svg>
+        <div style="font-size:9px;color:var(--text-lt);text-align:center;">onluntur</div>
+      </div>
+      <!-- Mini donut 3 — sand accent -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <svg viewBox="0 0 44 44" width="44" height="44" style="filter:drop-shadow(2px 4px 8px rgba(160,120,50,0.26))">
+          <circle cx="22" cy="22" r="14" fill="none" stroke="#c8a060" stroke-width="9" stroke-dasharray="68 20" stroke-dashoffset="-5" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="14" fill="none" stroke="#e8c888" stroke-width="9" stroke-dasharray="17 71" stroke-dashoffset="-73" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="8" fill="rgba(248,245,240,0.80)"/>
+        </svg>
+        <div style="font-size:9px;color:var(--text-lt);text-align:center;">marklut</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 4: Metrics + wave ══ -->
+  <div class="card">
+    <div class="card-dot"></div>
+    <div class="card-label">Team Nanol</div>
+
+    <div class="metric-row">
+      <div>
+        <div class="metric-title">Dollna Thouse!</div>
+        <div class="metric-sub">Ellsen tokthen Aetl</div>
+        <div class="metric-sub">Us. Aolr</div>
+      </div>
+      <div class="metric-val">490</div>
+    </div>
+
+    <div class="metric-row">
+      <div>
+        <div class="metric-title">Lerest Ntweol</div>
+        <div class="metric-sub">Elenure option aot8</div>
+        <div class="metric-sub">Tion</div>
+      </div>
+      <div class="metric-val" style="color:var(--teal-dk);">400</div>
+    </div>
+
+    <!-- Mini wave -->
+    <div class="mini-wave-wrap">
+      <svg viewBox="0 0 220 55" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;border-radius:10px;overflow:hidden">
+        <defs>
+          <linearGradient id="mWave1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#90c0c0" stop-opacity="0.70"/>
+            <stop offset="100%" stop-color="#70a8a8" stop-opacity="0.30"/>
+          </linearGradient>
+          <linearGradient id="mWave2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#b0d0d0" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#90b8b8" stop-opacity="0.20"/>
+          </linearGradient>
+        </defs>
+        <rect width="220" height="55" fill="rgba(248,245,240,0.50)" rx="0"/>
+        <path d="M0 45 Q30 38 60 42 Q90 46 120 35 Q150 24 180 30 Q200 34 220 28 L220 55 L0 55 Z" fill="url(#mWave2)"/>
+        <path d="M0 55 Q25 50 55 52 Q85 54 115 44 Q145 34 175 38 Q200 41 220 35 L220 55 Z" fill="url(#mWave1)"/>
+      </svg>
+    </div>
+
+    <!-- Wave tabs -->
+    <div class="wave-tabs">
+      <div class="wave-tab active">1Wk</div>
+      <div class="wave-tab" onclick="switchWaveTab(this)">1Mo</div>
+      <div class="wave-tab" onclick="switchWaveTab(this)">6Mo</div>
+      <div class="wave-tab" onclick="switchWaveTab(this)">1Yr</div>
+    </div>
+
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot" style="background:#a0c8c8"></div> Automation Ales</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#d4a870"></div> Lolution Alear</div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 5: Circles + Droplets (wide) ══ -->
+  <div class="card card-wide">
+    <div class="card-dot"></div>
+    <div class="card-label">He Banrts</div>
+
+    <div style="display:flex;align-items:flex-end;gap:20px;">
+      <!-- Circles -->
+      <div class="circles-row">
+        <!-- Large cream/sand circle -->
+        <div class="circle-3d circle-lg">
+          <div class="circle-text">Beonert<br>Compet<br>Aolicat</div>
+        </div>
+        <!-- Medium teal circle -->
+        <div class="circle-3d circle-md">
+          <div class="circle-text" style="color:rgba(40,70,70,0.60)">Etlents<br>Disal</div>
+        </div>
+      </div>
+
+      <!-- Droplets -->
+      <div class="droplets-row" style="flex:1;justify-content:center;">
+        <div class="droplet">
+          <div class="droplet-sand" style="display:flex;align-items:center;justify-content:center;flex-direction:column;padding-top:18px;">
+            <div style="font-size:9px;font-weight:700;color:rgba(90,60,20,0.60);text-align:center;line-height:1.4">Beonert<br>Compet</div>
+          </div>
+        </div>
+        <div class="droplet" style="margin-bottom:8px;">
+          <div class="droplet-teal" style="display:flex;align-items:center;justify-content:center;flex-direction:column;padding-top:14px;">
+            <div style="font-size:8.5px;font-weight:700;color:rgba(30,60,60,0.60);text-align:center;line-height:1.4">Etlent</div>
+          </div>
+        </div>
+        <!-- Small extra droplet -->
+        <div class="droplet" style="margin-bottom:4px;">
+          <svg width="32" height="42" viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg"
+               style="filter:drop-shadow(2px 5px 10px rgba(100,110,110,0.28)) drop-shadow(-1px -1px 4px rgba(255,255,255,0.60))">
+            <path d="M16 0 C16 0 32 17 32 27 C32 35.8 24.8 42 16 42 C7.2 42 0 35.8 0 27 C0 17 16 0 16 0 Z"
+                  fill="url(#dropG2)"/>
+            <defs>
+              <linearGradient id="dropG2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#d8d8e8"/>
+                <stop offset="100%" stop-color="#b0b0c8"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="11" cy="18" rx="4" ry="6" fill="rgba(255,255,255,0.22)" transform="rotate(-15 11 18)"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="card5-bottom">
+      <div class="btn-3d">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect width="11" height="11" rx="2.5" fill="rgba(255,255,255,0.18)"/><line x1="5.5" y1="2" x2="5.5" y2="9" stroke="rgba(255,255,255,0.70)" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="5.5" x2="9" y2="5.5" stroke="rgba(255,255,255,0.70)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Telnet Stnols
+      </div>
+      <input class="input-3d" type="text" placeholder="The Elterntion ist...">
+      <div class="icon-row">
+        <div class="icon-sm">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        </div>
+        <div class="icon-sm">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+      </div>
+      <div class="dots-row">
+        <div class="dot-sm"></div>
+        <div class="dot-sm dot-active"></div>
+        <div class="dot-sm"></div>
+        <div class="dot-sm"></div>
+        <div class="dot-sm"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 6: Toggles + Counters ══ -->
+  <div class="card" style="grid-column:2">
+    <div class="card-dot"></div>
+    <div class="card-label">Capre</div>
+
+    <!-- Pill buttons row -->
+    <div style="display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;">
+      <div class="btn-pill-glass" style="font-size:11px;padding:6px 12px">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-right:4px"><circle cx="5" cy="5" r="4.5" stroke="#88a0a0" stroke-width="1"/><circle cx="5" cy="5" r="1.5" fill="#88a0a0"/></svg>
+        Dilogne Folms
+      </div>
+      <div style="font-size:10px;color:var(--text-lt);margin-top:4px;">Siloune Oton Tenplant Wormsnort</div>
+    </div>
+
+    <!-- Toggle 1 — ON (sand) -->
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Primary Toggle</div>
+        <div class="toggle-sub">Active state</div>
+      </div>
+      <div class="toggle-3d on" id="tog1" onclick="toggleSwitch('tog1')"><div class="t-knob"></div></div>
+    </div>
+
+    <!-- Toggle 2 — OFF -->
+    <div class="toggle-row" style="margin-top:8px;">
+      <div>
+        <div class="toggle-label">Secondary</div>
+        <div class="toggle-sub">Inactive</div>
+      </div>
+      <div class="toggle-3d off" id="tog2" onclick="toggleSwitch('tog2')"><div class="t-knob"></div></div>
+    </div>
+
+    <!-- Pill action buttons -->
+    <div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;">
+      <button class="btn-pill-sand">Dicylt</button>
+      <button class="btn-pill-glass">Wollel</button>
+      <button class="btn-pill-dark">Tolpit</button>
+    </div>
+
+    <!-- Counters -->
+    <div class="counters-row">
+      <div class="counter-item">
+        <div class="counter-val">20</div>
+        <div class="counter-lbl">Liespoint</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-val" style="color:var(--teal-dk)">66</div>
+        <div class="counter-lbl">Cothures</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-val">90</div>
+        <div class="counter-lbl">Prealtion</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 7: Big Pie (right col, row 3 left-ish) ══ -->
+  <div class="card" style="grid-column:1;grid-row:3">
+    <div class="card-dot"></div>
+    <div class="card-label">Sheal Sonnd</div>
+
+    <div style="display:flex;align-items:center;justify-content:center;padding:6px 0 10px;">
+      <!-- Big bold 3D pie -->
+      <svg viewBox="0 0 180 180" width="170" height="170"
+           style="filter:drop-shadow(6px 12px 28px rgba(90,100,100,0.28)) drop-shadow(-3px -3px 12px rgba(255,255,255,0.65))">
+        <defs>
+          <linearGradient id="bigSand" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e8c490"/>
+            <stop offset="100%" stop-color="#c09050"/>
+          </linearGradient>
+          <linearGradient id="bigTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a0c8c8"/>
+            <stop offset="100%" stop-color="#6aa0a0"/>
+          </linearGradient>
+          <linearGradient id="bigCream" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f0e8d8"/>
+            <stop offset="100%" stop-color="#d8cdb8"/>
+          </linearGradient>
+          <linearGradient id="bigDark" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4a3820"/>
+            <stop offset="100%" stop-color="#2a2010"/>
+          </linearGradient>
+        </defs>
+        <!-- cx=90 cy=90 r=80 -->
+        <!-- Segment 1: sand ~110deg (large right portion) -->
+        <path d="M90 90 L90 10 A80 80 0 0 1 170 90 Z" fill="url(#bigSand)"/>
+        <!-- Segment 2: dark small ~50deg (separates sand from teal) -->
+        <path d="M90 90 L170 90 A80 80 0 0 1 140.7 150.7 Z" fill="url(#bigDark)"/>
+        <!-- Segment 3: cream ~70deg -->
+        <path d="M90 90 L140.7 150.7 A80 80 0 0 1 65 164.3 Z" fill="url(#bigCream)"/>
+        <!-- Segment 4: teal ~130deg (large left) -->
+        <path d="M90 90 L65 164.3 A80 80 0 0 1 10 90 Z" fill="url(#bigTeal)"/>
+        <!-- Segment 5: small gap top -->
+        <path d="M90 90 L10 90 A80 80 0 0 1 90 10 Z" fill="url(#bigSand)" opacity="0.60"/>
+        <!-- Dividers -->
+        <line x1="90" y1="90" x2="90" y2="10"       stroke="rgba(255,255,255,0.40)" stroke-width="1.5"/>
+        <line x1="90" y1="90" x2="170" y2="90"      stroke="rgba(255,255,255,0.30)" stroke-width="1.5"/>
+        <line x1="90" y1="90" x2="140.7" y2="150.7" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
+        <line x1="90" y1="90" x2="65" y2="164.3"    stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+        <line x1="90" y1="90" x2="10" y2="90"       stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
+        <!-- Shine arc -->
+        <ellipse cx="118" cy="42" rx="18" ry="9" fill="rgba(255,255,255,0.20)" transform="rotate(40 118 42)"/>
+        <ellipse cx="55" cy="110" rx="14" ry="7" fill="rgba(255,255,255,0.14)" transform="rotate(10 55 110)"/>
+      </svg>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend-row" style="justify-content:center">
+      <div class="legend-item"><div class="legend-dot" style="background:#c89050"></div> with a Same</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#88b0b0"></div> Should ale tren Queltest</div>
+    </div>
+  </div>
+
+</div><!-- /dashboard -->
+
+<script>
+// Toggle switches
+function toggleSwitch(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('on');
+  el.classList.toggle('off');
+}
+
+// Wave tab
+function switchWaveTab(el) {
+  el.closest('.wave-tabs').querySelectorAll('.wave-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Subtle parallax hover on cards
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width/2)  / (r.width/2);
+    const y = (e.clientY - r.top  - r.height/2) / (r.height/2);
+    card.style.transform = `perspective(700px) rotateY(${x*3}deg) rotateX(${-y*3}deg) translateZ(4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// Animate counter values on scroll into view
+const counters = document.querySelectorAll('.counter-val');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      const el = en.target;
+      const target = parseInt(el.textContent.replace(/\D/g,''));
+      let cur = 0;
+      const step = Math.max(1, Math.floor(target / 40));
+      const timer = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = cur;
+        if (cur >= target) clearInterval(timer);
+      }, 30);
+      obs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => obs.observe(c));
+</script>
+</body>
+</html>

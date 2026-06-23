@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liquid Glass Kit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   CSS VARIABLES
+   ============================================================ */
+:root {
+  --bg: #d4c5b8;
+  --bg2: #c8bab0;
+  --glass-bg: rgba(255,255,255,0.28);
+  --glass-border: rgba(255,255,255,0.68);
+  --glass-shadow: 0 8px 40px rgba(120,100,80,0.18), 0 2px 8px rgba(120,100,80,0.10);
+  --glass-inner: inset 0 1.5px 0 rgba(255,255,255,0.72), inset 0 -1px 0 rgba(255,255,255,0.18);
+  --purple: #7c3aed;
+  --purple-light: #a78bfa;
+  --teal: #2dd4bf;
+  --teal-light: #5eead4;
+  --blue: #3b82f6;
+  --pink: #ec4899;
+  --green: #22c55e;
+  --radius-pill: 999px;
+  --radius-card: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-xs: 7px;
+  --font: 'DM Sans', sans-serif;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ============================================================
+   BACKGROUND SCENE - warm beige with dramatic shadows
+   ============================================================ */
+.bg-scene {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 20%, rgba(200,185,165,0.85) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 70% at 85% 80%, rgba(160,145,130,0.70) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 15%, rgba(180,195,210,0.45) 0%, transparent 65%),
+    linear-gradient(145deg, #d8ccc0 0%, #c8bdb2 35%, #bdb0a5 65%, #c5bab0 100%);
+}
+
+/* Dramatic shadow blobs (like the reference) */
+.bg-scene::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 35% 55% at 8% 55%, rgba(80,60,40,0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 28% 45% at 18% 75%, rgba(80,60,40,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 20% 40% at 90% 65%, rgba(60,80,100,0.15) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 75% 90%, rgba(80,60,40,0.12) 0%, transparent 60%);
+}
+
+/* Light refraction top-right */
+.bg-scene::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 25% 25% at 88% 12%, rgba(200,230,255,0.28) 0%, transparent 60%),
+    radial-gradient(ellipse 15% 20% at 92% 5%, rgba(255,255,255,0.20) 0%, transparent 50%);
+}
+
+/* ============================================================
+   MAIN GLASS CARD
+   ============================================================ */
+.kit-card {
+  position: relative; z-index: 10;
+  width: 560px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(28px) saturate(1.6) brightness(1.05);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.05);
+  border-radius: 30px;
+  border: 1.5px solid rgba(255,255,255,0.65);
+  box-shadow:
+    0 20px 60px rgba(100,80,60,0.22),
+    0 4px 16px rgba(100,80,60,0.12),
+    inset 0 2px 0 rgba(255,255,255,0.80),
+    inset 0 -1px 0 rgba(255,255,255,0.25),
+    inset 1px 0 0 rgba(255,255,255,0.50),
+    inset -1px 0 0 rgba(255,255,255,0.30);
+  padding: 28px 26px 30px;
+  animation: kitIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes kitIn {
+  from { opacity:0; transform: scale(0.96) translateY(20px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+/* Refraction edge shimmer */
+.kit-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.18) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(255,255,255,0.08) 100%
+  );
+  pointer-events: none;
+}
+
+/* ============================================================
+   CARD HEADER
+   ============================================================ */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Gear icon button */
+.ctrl-btn {
+  width: 30px; height: 30px;
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.60);
+  box-shadow: 0 2px 8px rgba(100,80,60,0.12), inset 0 1px 0 rgba(255,255,255,0.70);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+}
+.ctrl-btn:hover { background: rgba(255,255,255,0.55); transform: scale(1.06); }
+
+.dash-btn {
+  width: 30px; height: 30px;
+  background: rgba(255,255,255,0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.55);
+  box-shadow: 0 2px 8px rgba(100,80,60,0.10), inset 0 1px 0 rgba(255,255,255,0.65);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+}
+.dash-btn:hover { background: rgba(255,255,255,0.50); }
+
+/* ============================================================
+   GRID LAYOUT
+   ============================================================ */
+.kit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.col-left { display: flex; flex-direction: column; gap: 12px; }
+.col-right { display: flex; flex-direction: column; gap: 12px; }
+
+/* ============================================================
+   LIQUID GLASS BUTTON — PURPLE (Primary/Secondary)
+   ============================================================ */
+.liquid-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  overflow: visible;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s;
+  -webkit-appearance: none;
+  appearance: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.liquid-btn:active { transform: scale(0.97) !important; }
+
+/* Purple button */
+.btn-purple {
+  width: 100%;
+  height: 52px;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 40%, #6d28d9 100%);
+  box-shadow:
+    0 6px 24px rgba(124,58,237,0.50),
+    0 2px 6px rgba(124,58,237,0.30),
+    inset 0 1.5px 0 rgba(255,255,255,0.40),
+    inset 0 -1.5px 0 rgba(0,0,0,0.15),
+    inset 2px 0 8px rgba(255,255,255,0.12),
+    inset -2px 0 6px rgba(0,0,0,0.08);
+}
+.btn-purple:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 10px 30px rgba(124,58,237,0.60),
+    0 4px 10px rgba(124,58,237,0.35),
+    inset 0 1.5px 0 rgba(255,255,255,0.45),
+    inset 0 -1.5px 0 rgba(0,0,0,0.15);
+}
+
+/* Liquid highlight on purple btn */
+.btn-purple::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 18%; right: 18%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.0) 100%);
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+}
+/* Refraction glint top-left */
+.btn-purple::after {
+  content: '';
+  position: absolute;
+  top: 5px; left: 12px;
+  width: 28px; height: 14px;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.55) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Teal button */
+.btn-teal {
+  width: 100%;
+  height: 52px;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 40%, #0d9488 100%);
+  box-shadow:
+    0 6px 24px rgba(20,184,166,0.48),
+    0 2px 6px rgba(20,184,166,0.28),
+    inset 0 1.5px 0 rgba(255,255,255,0.42),
+    inset 0 -1.5px 0 rgba(0,0,0,0.12),
+    inset 2px 0 8px rgba(255,255,255,0.14);
+}
+.btn-teal:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 10px 30px rgba(20,184,166,0.58),
+    0 4px 10px rgba(20,184,166,0.30),
+    inset 0 1.5px 0 rgba(255,255,255,0.45);
+}
+.btn-teal::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 18%; right: 18%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.0) 100%);
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+}
+.btn-teal::after {
+  content: '';
+  position: absolute;
+  top: 5px; left: 12px;
+  width: 28px; height: 14px;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.50) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ============================================================
+   ICON + TOGGLE ROW BUTTONS
+   ============================================================ */
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Glass circle add button */
+.glass-circle-btn {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.38);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1.5px solid rgba(255,255,255,0.70);
+  box-shadow:
+    0 6px 20px rgba(100,80,60,0.18),
+    0 2px 6px rgba(100,80,60,0.10),
+    inset 0 2px 0 rgba(255,255,255,0.85),
+    inset 0 -1px 0 rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #333;
+  font-size: 22px; font-weight: 400;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.glass-circle-btn:hover {
+  transform: scale(1.07);
+  box-shadow:
+    0 8px 26px rgba(100,80,60,0.24),
+    inset 0 2px 0 rgba(255,255,255,0.90);
+}
+
+/* Glass toggle / pill small btn */
+.glass-pill-sm {
+  width: 52px; height: 28px;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,0.32);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255,255,255,0.62);
+  box-shadow:
+    0 4px 14px rgba(100,80,60,0.14),
+    inset 0 1.5px 0 rgba(255,255,255,0.80),
+    inset 0 -1px 0 rgba(255,255,255,0.20);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  position: relative;
+}
+.glass-pill-sm:hover { background: rgba(255,255,255,0.48); transform: scale(1.05); }
+
+/* The circular knob inside toggle */
+.knob {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.70);
+  box-shadow: 0 2px 6px rgba(100,80,60,0.22), inset 0 1px 0 rgba(255,255,255,0.90);
+  position: absolute;
+  left: 4px;
+  transition: left 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s;
+}
+.glass-pill-sm.on .knob {
+  left: calc(100% - 24px);
+  background: #fff;
+}
+
+/* ============================================================
+   INPUT — Create workspace / Search projects
+   ============================================================ */
+.glass-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255,255,255,0.68);
+  box-shadow:
+    0 4px 18px rgba(100,80,60,0.12),
+    inset 0 1.5px 0 rgba(255,255,255,0.80),
+    inset 0 -1px 0 rgba(255,255,255,0.20);
+  padding: 0 14px 0 18px;
+  height: 44px;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+.glass-input-wrap:focus-within {
+  box-shadow:
+    0 6px 24px rgba(100,80,60,0.16),
+    0 0 0 2.5px rgba(124,58,237,0.20),
+    inset 0 1.5px 0 rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.45);
+}
+
+.glass-input {
+  flex: 1;
+  border: none; outline: none;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #333;
+}
+.glass-input::placeholder { color: rgba(80,60,50,0.52); }
+
+.input-icon-right {
+  color: rgba(80,60,50,0.50);
+  display: flex; align-items: center;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   WORKSPACE RESULT ROW (with green tick)
+   ============================================================ */
+.workspace-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.32);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(255,255,255,0.62);
+  box-shadow:
+    0 4px 16px rgba(100,80,60,0.10),
+    inset 0 1.5px 0 rgba(255,255,255,0.78);
+  padding: 13px 16px;
+  height: 48px;
+}
+
+.workspace-text {
+  font-size: 14px; font-weight: 500; color: #222;
+}
+
+.check-green {
+  color: #22c55e;
+  display: flex; align-items: center;
+}
+
+/* ============================================================
+   TABS ROW
+   ============================================================ */
+.tabs-wrap {
+  display: flex;
+  background: rgba(255,255,255,0.30);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255,255,255,0.60);
+  box-shadow:
+    0 4px 16px rgba(100,80,60,0.10),
+    inset 0 1.5px 0 rgba(255,255,255,0.78);
+  padding: 4px;
+  gap: 2px;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  user-select: none;
+  position: relative;
+}
+
+.tab-item.active {
+  background: rgba(255,255,255,0.68);
+  box-shadow: 0 2px 8px rgba(100,80,60,0.12), inset 0 1px 0 rgba(255,255,255,0.90);
+  color: #111;
+}
+
+/* Active tab underline */
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 28%; right: 28%;
+  height: 2.5px;
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  border-radius: 2px;
+}
+
+.tab-item:hover:not(.active) { background: rgba(255,255,255,0.25); }
+
+/* ============================================================
+   RIGHT COLUMN — TOP PANEL (app icon + circle toggle)
+   ============================================================ */
+.right-panel-top {
+  position: relative;
+  background: linear-gradient(135deg, #7dd3d8 0%, #5ec8c0 30%, #4db8c8 60%, #6fcfca 100%);
+  border-radius: var(--radius-card);
+  border: 1.5px solid rgba(255,255,255,0.55);
+  box-shadow:
+    0 6px 24px rgba(80,160,160,0.30),
+    inset 0 2px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(0,0,0,0.06);
+  padding: 14px 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  overflow: hidden;
+  height: 110px;
+}
+.right-panel-top::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.20) 0%, transparent 50%);
+  border-radius: var(--radius-card);
+  pointer-events: none;
+}
+
+/* App icon */
+.app-icon-wrap {
+  width: 46px; height: 46px;
+  background: rgba(255,255,255,0.30);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
+  border: 1.5px solid rgba(255,255,255,0.60);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.12), inset 0 1.5px 0 rgba(255,255,255,0.70);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Circle ring toggle (top-right of panel) */
+.ring-toggle {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.55);
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.12),
+    inset 0 1.5px 0 rgba(255,255,255,0.60);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.ring-toggle:hover { background: rgba(255,255,255,0.38); transform: scale(1.07); }
+
+/* Inner dot of ring toggle */
+.ring-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+  box-shadow: 0 2px 6px rgba(124,58,237,0.50);
+}
+
+/* Search bar in teal panel */
+.panel-search-row {
+  position: absolute;
+  bottom: 14px; left: 14px; right: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.panel-search-input {
+  flex: 1;
+  height: 38px;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255,255,255,0.72);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1.5px 0 rgba(255,255,255,0.80);
+  padding: 0 16px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 400;
+  color: #333;
+  outline: none;
+}
+.panel-search-input::placeholder { color: rgba(60,50,40,0.45); }
+
+/* Purple + button */
+.add-circle-purple {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border: none;
+  box-shadow:
+    0 4px 14px rgba(124,58,237,0.50),
+    inset 0 1.5px 0 rgba(255,255,255,0.38);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 20px; font-weight: 300;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.add-circle-purple::before {
+  content: '';
+  position: absolute;
+  top: 3px; left: 8px; right: 8px;
+  height: 35%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.add-circle-purple { position: relative; }
+.add-circle-purple:hover { transform: scale(1.09); box-shadow: 0 6px 20px rgba(124,58,237,0.60); }
+
+/* ============================================================
+   RIGHT — SEARCH ROW WITH CHECKBOX
+   ============================================================ */
+.search-check-row {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.32);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255,255,255,0.62);
+  box-shadow:
+    0 4px 16px rgba(100,80,60,0.10),
+    inset 0 1.5px 0 rgba(255,255,255,0.80);
+  padding: 0 10px 0 12px;
+  height: 44px;
+  gap: 10px;
+}
+
+/* Filled purple checkbox */
+.check-filled {
+  width: 22px; height: 22px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  border: none;
+  box-shadow: 0 2px 6px rgba(124,58,237,0.40);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.search-text {
+  flex: 1;
+  font-size: 13.5px; color: #333; font-weight: 400;
+}
+
+/* Arrow right circle */
+.arrow-circle {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.50);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.70);
+  box-shadow: 0 2px 6px rgba(100,80,60,0.10), inset 0 1px 0 rgba(255,255,255,0.85);
+  display: flex; align-items: center; justify-content: center;
+  color: #555;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   RIGHT — FILES ROW (checkbox outline + link icon + toggle + +)
+   ============================================================ */
+.files-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Outline checkbox */
+.check-outline {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(80,60,40,0.30);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.70);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(80,60,40,0.50);
+  flex-shrink: 0;
+}
+
+.files-label {
+  font-size: 13.5px; color: #333; font-weight: 400;
+  flex: 1;
+}
+
+/* Link icon */
+.icon-link {
+  color: rgba(80,60,40,0.45);
+  display: flex; align-items: center;
+  flex-shrink: 0;
+}
+
+/* Pill toggle (teal outline) */
+.pill-toggle {
+  width: 52px; height: 28px;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(45,212,191,0.55);
+  box-shadow:
+    0 2px 8px rgba(20,184,166,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.70);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.pill-toggle .knob-sm {
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 1.5px 5px rgba(100,80,60,0.20), inset 0 1px 0 rgba(255,255,255,0.85);
+  position: absolute;
+  top: 3px; left: 3px;
+  transition: left 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pill-toggle.on .knob-sm { left: calc(100% - 22px); }
+
+/* Round + button (glass) */
+.round-plus-glass {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.38);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,0.65);
+  box-shadow: 0 2px 8px rgba(100,80,60,0.12), inset 0 1.5px 0 rgba(255,255,255,0.80);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #555;
+  font-size: 16px; font-weight: 300;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.round-plus-glass:hover { background: rgba(255,255,255,0.55); transform: scale(1.08); }
+
+/* ============================================================
+   INVITE CARD — gradient pink/purple/blue
+   ============================================================ */
+.invite-card {
+  position: relative;
+  background: linear-gradient(135deg, #f0a8d0 0%, #d8a4e8 25%, #b8a4e8 50%, #a8bce8 75%, #98d0e8 100%);
+  border-radius: var(--radius-card);
+  border: 1.5px solid rgba(255,255,255,0.55);
+  box-shadow:
+    0 8px 28px rgba(160,100,200,0.30),
+    inset 0 2px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(0,0,0,0.04);
+  padding: 16px 16px 14px;
+  overflow: hidden;
+  flex: 1;
+}
+.invite-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%);
+  border-radius: var(--radius-card);
+  pointer-events: none;
+}
+
+/* Frosted toggle top-right of invite card */
+.invite-toggle {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 40px; height: 22px;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,0.60);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.75);
+  cursor: pointer;
+}
+
+.invite-title {
+  font-size: 15px; font-weight: 700; color: #1a0a2e;
+  margin-top: 4px; margin-bottom: 3px;
+}
+.invite-sub {
+  font-size: 12px; color: rgba(40,10,60,0.60); font-weight: 400;
+  margin-bottom: 14px;
+}
+
+/* Upgrade button */
+.upgrade-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.52);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255,255,255,0.75);
+  box-shadow:
+    0 3px 12px rgba(0,0,0,0.10),
+    inset 0 1.5px 0 rgba(255,255,255,0.85);
+  padding: 8px 16px;
+  font-family: var(--font);
+  font-size: 13px; font-weight: 600;
+  color: #1a0a2e;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.upgrade-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+}
+.upgrade-btn { position: relative; }
+.upgrade-btn:hover {
+  background: rgba(255,255,255,0.68);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px rgba(0,0,0,0.14), inset 0 1.5px 0 rgba(255,255,255,0.90);
+}
+
+/* ============================================================
+   SPECULAR / EDGE GLINTS OVERLAY on main card
+   ============================================================ */
+.kit-card-glint {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  border-radius: 30px 30px 0 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   RESPONSIVE / MISC
+   ============================================================ */
+.gap-10 { gap: 10px; }
+.gap-8 { gap: 8px; }
+
+/* Divider slot between toggle and circle */
+.divider-v {
+  width: 1px; height: 24px;
+  background: rgba(100,80,60,0.18);
+  flex-shrink: 0;
+}
+
+/* Right actions row in files row */
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ============================================================
+   HOVER RIPPLE EFFECT
+   ============================================================ */
+.liquid-btn .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.28);
+  transform: scale(0);
+  animation: rippleAnim 0.55s linear;
+  pointer-events: none;
+}
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ============================================================
+   SUBTLE PULSE on ring dot
+   ============================================================ */
+@keyframes ringPulse {
+  0%, 100% { box-shadow: 0 2px 6px rgba(124,58,237,0.50); }
+  50%       { box-shadow: 0 2px 12px rgba(124,58,237,0.80), 0 0 0 4px rgba(124,58,237,0.15); }
+}
+.ring-dot { animation: ringPulse 2.8s ease-in-out infinite; }
+
+/* ============================================================
+   STAGGER ANIMATION
+   ============================================================ */
+.kit-grid > * {
+  animation: colIn 0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+.col-left  { animation-delay: 0.12s; }
+.col-right { animation-delay: 0.22s; }
+
+@keyframes colIn {
+  from { opacity:0; transform: translateY(14px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* ============================================================
+   SCROLLBAR HIDE
+   ============================================================ */
+::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+
+<div class="bg-scene"></div>
+
+<div class="kit-card">
+  <div class="kit-card-glint"></div>
+
+  <!-- HEADER -->
+  <div class="card-header">
+    <div class="card-title">Liquid Glass Kit</div>
+    <div class="header-controls">
+      <div class="ctrl-btn" title="Settings">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </div>
+      <div class="dash-btn" title="Minimize">
+        <svg width="12" height="2" viewBox="0 0 12 2" fill="none">
+          <line x1="0" y1="1" x2="12" y2="1" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="kit-grid">
+
+    <!-- ====== LEFT COLUMN ====== -->
+    <div class="col-left">
+
+      <!-- Purple liquid button -->
+      <button class="liquid-btn btn-purple" onclick="ripple(event,this)">
+        <span style="position:relative;z-index:1">Secondary</span>
+      </button>
+
+      <!-- Teal liquid button -->
+      <button class="liquid-btn btn-teal" onclick="ripple(event,this)">
+        <span style="position:relative;z-index:1">Secondary</span>
+      </button>
+
+      <!-- + circle  |  pill toggle -->
+      <div class="row-actions">
+        <div class="glass-circle-btn" onclick="this.style.background='rgba(255,255,255,0.55)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
+
+        <div class="glass-pill-sm" id="toggle1" onclick="toggleEl('toggle1')">
+          <div class="knob"></div>
+        </div>
+      </div>
+
+      <!-- Search input -->
+      <div class="glass-input-wrap">
+        <input class="glass-input" type="text" placeholder="Create workspace">
+        <span class="input-icon-right">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Workspace result row -->
+      <div class="workspace-result">
+        <span class="workspace-text">Writespace</span>
+        <span class="check-green">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs-wrap">
+        <div class="tab-item active">Toast</div>
+        <div class="tab-item" onclick="switchTab(this)">Tabs</div>
+      </div>
+
+    </div>
+
+    <!-- ====== RIGHT COLUMN ====== -->
+    <div class="col-right">
+
+      <!-- Top teal panel -->
+      <div class="right-panel-top">
+        <div class="app-icon-wrap">
+          <!-- Flag / app icon SVG -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+            <line x1="4" y1="22" x2="4" y2="15"/>
+          </svg>
+        </div>
+
+        <div class="ring-toggle" onclick="this.classList.toggle('active')">
+          <div class="ring-dot"></div>
+        </div>
+
+        <!-- Search bar at bottom of teal panel -->
+        <div class="panel-search-row">
+          <input class="panel-search-input" type="text" placeholder="Search projects...">
+          <div class="add-circle-purple">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search + check row -->
+      <div class="search-check-row">
+        <div class="check-filled">
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+            <path d="M1.5 5L5 8.5L11.5 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="search-text">Search projects...</span>
+        <div class="arrow-circle">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Files row -->
+      <div class="files-row">
+        <div class="check-outline">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+            <path d="M1 4.5L4 7.5L10 1.5" stroke="rgba(80,60,40,0.45)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="files-label">files</span>
+        <span class="icon-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </span>
+        <div class="right-actions">
+          <div class="pill-toggle" id="toggle2" onclick="togglePill('toggle2')">
+            <div class="knob-sm"></div>
+          </div>
+          <div class="round-plus-glass">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invite card -->
+      <div class="invite-card" style="flex:1">
+        <div class="invite-toggle"></div>
+        <div class="invite-title">Invite member</div>
+        <div class="invite-sub">Upgrade plan</div>
+        <div class="upgrade-btn" onclick="this.style.background='rgba(255,255,255,0.75)'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Upootle plan
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Toggle helpers ────────────────────────────────────────────────────────
+function toggleEl(id) {
+  document.getElementById(id).classList.toggle('on');
+}
+function togglePill(id) {
+  document.getElementById(id).classList.toggle('on');
+}
+
+// ─── Tabs ─────────────────────────────────────────────────────────────────
+function switchTab(el) {
+  el.closest('.tabs-wrap').querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── Ripple ───────────────────────────────────────────────────────────────
+function ripple(e, btn) {
+  const r = document.createElement('span');
+  r.classList.add('ripple');
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.width = r.style.height = size + 'px';
+  r.style.left  = (e.clientX - rect.left  - size/2) + 'px';
+  r.style.top   = (e.clientY - rect.top   - size/2) + 'px';
+  btn.appendChild(r);
+  setTimeout(() => r.remove(), 600);
+}
+
+// ─── Tab click passthrough ─────────────────────────────────────────────────
+document.querySelectorAll('.tab-item').forEach(t => {
+  t.addEventListener('click', function() { switchTab(this); });
+});
+
+// ─── Subtle parallax on main card ─────────────────────────────────────────
+const card = document.querySelector('.kit-card');
+document.addEventListener('mousemove', e => {
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const dx = (e.clientX - cx) / cx;
+  const dy = (e.clientY - cy) / cy;
+  card.style.transform = `perspective(900px) rotateY(${dx * 2.5}deg) rotateX(${-dy * 2}deg)`;
+});
+document.addEventListener('mouseleave', () => {
+  card.style.transform = '';
+});
+</script>
+</body>
+</html>
